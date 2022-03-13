@@ -1,9 +1,9 @@
 /**
- @file  MealGenerator class implementation file
+ @file MealGenerator class implementation file
  @for MealTime socket programming project
  @authors Phuc T, Narissa T
- @date 3/10/22
- @version .0
+ @date 3/13/22
+ @version 3.0
  */
 #include <string>
 #include <iostream>

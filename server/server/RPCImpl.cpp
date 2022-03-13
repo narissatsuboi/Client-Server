@@ -1,8 +1,8 @@
 /**
- @file  RPCImpl.cpp Remote Procedure Call implementation file.
+ @file RPCImpl.cpp Remote Procedure Call implementation file.
  @authors Phuc T, Narissa T
- @date 3/10/22
- @version 2.0
+ @date 3/13/22
+ @version 3.0
  */
 
 #include <unistd.h>

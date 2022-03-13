@@ -1,9 +1,9 @@
 /**
- @file  Meal class implementation file
+ @file Meal class implementation file
  @for MealTime socket programming project
  @authors Phuc T, Narissa T
- @date 2/12/22
- @version 1.0
+ @date 3/13/22
+ @version 2.0
  */
 
 #include "Meal.h"

@@ -1,7 +1,7 @@
 /**
  @file  Client side file for MealTime socket programming project
  @authors Phuc T, Narissa T
- @date 3/10/22
+ @date 3/13/22
  @version 1.0
  */
 
@@ -11,7 +11,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <string.h>
-#include <vector>`
+#include <vector>
 #include <iterator>
 #include <iostream>
 
@@ -269,13 +269,14 @@ bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valrea
                         }
                     }
                     else
-                        cout << "Please try again.\m" << endl << endl;
+                        cout << "Please try again.\n" << endl << endl;
                 }
                 else
                     cout << "You succesfully added a meal!\n" << endl << endl;
             }
         }
     }
+	return true;
 }
 
 void client::welcome() {

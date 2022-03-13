@@ -1,8 +1,8 @@
 /**
- @file  RPCImpl.h Remote Procedure Call header file. 
+ @file RPCImpl.h Remote Procedure Call header file. 
  @authors Phuc T, Narissa T
- @date 3/10/22
- @version 2.0
+ @date 3/13/22
+ @version 3.0
  */
 #pragma once
 #include <unistd.h>

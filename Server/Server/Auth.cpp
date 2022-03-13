@@ -1,8 +1,8 @@
 /**
  @file auth.cpp
  @authors Phuc T, Narissa T, Kristen K
- @date 3/10/22
- @version 1.0
+ @date 3/13/22
+ @version 2.0
  */
 
 #include "Auth.h"
@@ -42,9 +42,8 @@ bool Auth::assignAdmin(const string & username)
 		if (this->adminLookupMap.find(username) == adminLookupMap.end()) {
 			this->adminLookupMap.insert({ username, true });
 		}
-
-		return true;
 	}
+	return true;
 }
 
 bool Auth::login(const string & username, const string & password)
