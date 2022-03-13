@@ -118,13 +118,25 @@ bool RPCServer::ListenForClient() {
 		}
 
 		// Launch Thread to Process RPC
-		//TODO:Join these thread ids, don't know where though. 
+		printf("RPCServer>ListenForClient: Launching thread");
 		thread_ids.push_back(thread_id);
 		int socket = m_socket;
+<<<<<<< Updated upstream
 
 		// Create new thread with socket.
 		printf("RPCServer>ListenForClient: Launching thread");
 		pthread_create(&thread_id, NULL, myThreadFun, (void*)&socket);
+=======
+		struct threadArgs input;
+		input.socket = socket;
+		input.mg = this->mg;
+		input.gc = this->gc;
+		input.accountDB = this->accountDB;
+		input.meal = this->updateMG;
+		input.account = this->updateDB;
+		input.global = this->updateGC;
+		pthread_create(&thread_id, NULL, myThreadFun, (void*)&input);
+>>>>>>> Stashed changes
 	}
 	return true;
 }
