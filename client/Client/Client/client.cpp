@@ -26,7 +26,7 @@ const int STYLE = SOCK_STREAM;        // comm style for TCP programming
 const int PROTOCOL = 0;               // 0 for internet 
 const int BUFF_SIZE = 1024;           // default buffer size
 
-const char* deli = ";";
+const char* DELI = ";";               // ParseToken delimeter
 
 
 
@@ -48,8 +48,7 @@ int main(int argc, char const* argv[])
     bool bConnect = client::connectToServer(serverAddress, PORT, cliSocket);
 
 	// Continue if socket successful connected to server. 
-    if (bConnect == true)
-    {
+    if (bConnect == true) {
         
         int valsend;                    // Bytes sent.
         int valread;                    // Bytes rec'd. 
@@ -68,9 +67,7 @@ int main(int argc, char const* argv[])
             client::mealProcessing(cliSocket, buffer, valsend, valread, arrayTokens, STATUSTOKEN, INFOTOKEN, msg);               
     }
     else
-    {
         printf("Connection failed");
-    }
 
     // Terminate connection
     close(cliSocket);
@@ -88,12 +85,12 @@ bool client::loginValidation(int cliSocket, char* buffer, int valsend, int valre
         int userSelection;
         string username;
         string password;
-        string admin;
-
+        string admin = "N";
 
         // Prompt user to (1) Login, (2) Signup, (3) Exit. 
         cout << "Enter your option: ";
         cin >> userSelection;
+		cout << "\n";
 
         // Handle (1) Login and (2) Signup. 
         if ((userSelection == 1) || (userSelection == 2)) {
@@ -123,9 +120,9 @@ bool client::loginValidation(int cliSocket, char* buffer, int valsend, int valre
             valsend = send(cliSocket, buffer, strlen(buffer), 0);
 
             if (userSelection == 1)
-                cout << "Login message sent" << endl << endl;
+                cout << "Logging you in..." << endl << endl;
             else
-                cout << "Signup message sent" << endl << endl;
+                cout << "Signing you up..." << endl << endl;
 
             sleep(2);
 
@@ -136,39 +133,38 @@ bool client::loginValidation(int cliSocket, char* buffer, int valsend, int valre
             string error_code = arrayTokens[STATUSTOKEN];
 
             // Server returned successful error code upon login. 
-            if (error_code == "successful")
-            {
+            if (error_code == "successful") {
                 isValidUser = true;
-                cout << "Logged In successful." << endl;
+                cout << "Login successful!\n";
             }
             // Server returned failed error code upon login.
             else {
-                if (userSelection == 1) cout << "Invalid username/password. Try again!" << endl;
-                else cout << "Account already exists. Try login, or use another identity!" << endl;
+                if (userSelection == 1) 
+					cout << "Invalid username/password. Try again!\n\n";
+                else 
+					cout << "Account already exists. Try login, or use another identity!\n\n" << endl;
                 optionList();
             }
             cout << endl;
         }
         // (3) User has selected to exit. Exit gracefully. 
-        else if (userSelection == 3)
-        {
+        else if (userSelection == 3) {
             isValidUser = true;
             cout << "Goodbye!";
             return false;
         }
         // User entered invalid selection, calls optionList again. 
-        else
-        {
+        else {
             cout << "Invalid option. Let's try again!" << endl;
             optionList();
         }
-
     }
     return true;
 }
 
-bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valread, vector<string> arrayTokens, int STATUSTOKEN, int INFOTOKEN, string msg)
-{
+bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valread, 
+							vector<string> arrayTokens, int STATUSTOKEN, int INFOTOKEN, 
+							string msg) {
     const char* logoffRPC = "disconnect;";
 
     bool isValidUser = false;  // Loop control var
@@ -232,7 +228,7 @@ bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valrea
             if (userSelection == 4) // Disconnect
                 cout << "Disconnect message sent, goodbye!\n" << endl << endl;
             else
-                cout << "Your meal request has been sent.\n" << endl << endl;
+                cout << "Requesting a meal idea...\n\n";
 
             sleep(2);
 
@@ -250,8 +246,8 @@ bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valrea
                     if (error_code == "successful") {
                         string mealSuggestion = arrayTokens[INFOTOKEN];
 
-                        cout << "The meal for you would be " << mealSuggestion << "!\n";
-                        cout << "Do you need another suggestion? 1 if so and 2 to logout: ";
+                        cout << "The meal for you would be " << mealSuggestion << "!\n\n";
+                        cout << "Want another suggestion? Enter 1 to go again or 2 to logout: ";
                         cin >> userSelection;
 
 						// Disconnect. 
@@ -280,7 +276,7 @@ bool client::mealProcessing(int cliSocket, char* buffer, int valsend, int valrea
 }
 
 void client::welcome() {
-	string msg = "Welcome to the Client-Server Meal Generator! \nThis program will pass your requests about food\n" 
+	string msg = "Welcome to the Client-Server Meal Generator!\n\nThis program will pass your requests about food\n" 
 		"to and from the client and server to fetch you a\ndelicious meal idea!\n";
 	cout << msg << "\n";
 }
@@ -293,7 +289,7 @@ void client::optionList() {
 }
 
 void client::mealOptions() {
-    cout << "What kind of meal are you looking for? 0 to Exit" << endl;
+    cout << "What kind of meal are you looking for? (0 to logout)" << endl;
     cout << "1. A random meal" << endl;
     cout << "2. A meal by time" << endl;
     cout << "3. A meal by cuisine" << endl;    
@@ -304,12 +300,8 @@ void client::parseTokens(char* buffer, std::vector<std::string>& a) {
 	char* token;
 	char* rest = (char*)buffer;
 
-	while ((token = strtok_r(rest, deli, &rest)))
-	{
+	while ((token = strtok_r(rest, DELI, &rest)))
 		a.push_back(token);
-	}
-
-	return;
 }
 
 string client::toLowerCase(string s) {

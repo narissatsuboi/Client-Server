@@ -21,8 +21,6 @@
 
 using namespace std;
 
-
-
 void* myThreadFun(void* vargp)
 {
 
@@ -52,8 +50,7 @@ RPCServer::RPCServer(const char* serverIP, int port)
 RPCServer::~RPCServer() {};
 
 
-bool RPCServer::StartServer()
-{
+bool RPCServer::StartServer() {
 
 	// New socket constants 
 	const int OPTVAL = 1;               // setsockopt option value
@@ -64,11 +61,10 @@ bool RPCServer::StartServer()
 
 	// setsockopt constants
 	const int LEVEL = SOL_SOCKET;
-	const int OPTNAMES = SO_REUSEADDR;  // Socket level options to reuse address and port
+	const int OPTNAMES = SO_REUSEADDR | SO_REUSEPORT;  // Socket level options to reuse address and port
 
 	// Create socket file descriptor, exit on error or display success msg
-	if ((m_server_fd = socket(NAMESPACE, STYLE, PROTOCOL)) == 0)
-    {
+	if ((m_server_fd = socket(NAMESPACE, STYLE, PROTOCOL)) == 0) {
 		perror("RPCServer>StartServer: Socket creation error\n");
 		exit(EXIT_FAILURE);
     }
@@ -78,8 +74,7 @@ bool RPCServer::StartServer()
 
 	// TODO: NT Adjust the options when we switch to multithreading
     // forcefully attaching socket to the port
-    if (setsockopt(m_server_fd, LEVEL, OPTNAMES, &OPTVAL, sizeof(OPTVAL)))
-    {
+    if (setsockopt(m_server_fd, LEVEL, OPTNAMES, &OPTVAL, sizeof(OPTVAL))) {
 		perror("RPCServer>StartServer: Error setting up socket options\n");
 		exit(EXIT_FAILURE);
     }
@@ -91,8 +86,7 @@ bool RPCServer::StartServer()
 	m_address.sin_port = htons(m_port);                // Assign server's port and convert to network bytes
 
     // Bind socket to port
-    if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0)
-    {
+    if (bind(m_server_fd, (struct sockaddr*)&m_address, sizeof(m_address)) < 0) {
 		perror("RPCServer>StartServer: Error binding socket to address\n");
 		exit(EXIT_FAILURE);
     }
@@ -100,8 +94,7 @@ bool RPCServer::StartServer()
 		cout << "RPCServer>StartServer: Socket binding successful\n";
 
 	// Enable connection requests on server file descriptor, exit on error
-    if (listen(m_server_fd, BACKLOG) < 0)
-    {
+    if (listen(m_server_fd, BACKLOG) < 0) {
 		perror("RPCServer>StartServe: Error listening\n");
 		exit(EXIT_FAILURE);
     }
@@ -112,17 +105,14 @@ bool RPCServer::StartServer()
 }
 
 
-bool RPCServer::ListenForClient()
-{
+bool RPCServer::ListenForClient() {
 	int addrlen = sizeof(m_address);
 	vector<pthread_t> thread_ids;
 	pthread_t thread_id;
 
-	for (;;) //TODO Endless loop. Probably good to have some type of controlled shutdown
-	{
+	for (;;) {
 		if ((m_socket = accept(m_server_fd, (struct sockaddr*)&m_address,
-			(socklen_t*)&addrlen)) < 0)
-		{
+			(socklen_t*)&addrlen)) < 0) {
 			perror("accept");
 			exit(EXIT_FAILURE);
 		}
